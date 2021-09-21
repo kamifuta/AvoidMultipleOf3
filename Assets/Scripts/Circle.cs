@@ -11,6 +11,7 @@ public class Circle : MonoBehaviour, ICombinable
     [SerializeField] private Text numText;
     [SerializeField] private AnimationCurve scaleCurve;
 
+    private EffectGenerator effectGenerator;
     private ScoreManager scoreManager;
     private GameManager gameManager;
     private SpriteRenderer spriteRenderer;
@@ -22,9 +23,12 @@ public class Circle : MonoBehaviour, ICombinable
 
     private void Start()
     {
+        effectGenerator = FindObjectOfType<EffectGenerator>();
         scoreManager = FindObjectOfType<ScoreManager>();
         gameManager = FindObjectOfType<GameManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        effectGenerator.PlayGenerateEF(transform.position);
 
         this.ObserveEveryValueChanged(x => x.color)
             .Subscribe(x =>
@@ -46,6 +50,17 @@ public class Circle : MonoBehaviour, ICombinable
                 {
                     SetCircleScale();
                     gameManager.SetHighNumber(num);
+                }
+            })
+            .AddTo(this);
+
+        this.ObserveEveryValueChanged(x => x.num)
+            .Skip(1)
+            .Subscribe(x =>
+            {
+                if (x % 3 != 0) 
+                {
+                    effectGenerator.PlayCombineEF(transform.position);
                 }
             })
             .AddTo(this);
