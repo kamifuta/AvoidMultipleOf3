@@ -1,3 +1,4 @@
+using KanKikuchi.AudioManager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,5 +14,7 @@ public class CircleGenerator : MonoBehaviour
         circleObj.transform.SetParent(circleParent);
         var circle = circleObj.GetComponent<Circle>();
         circle?.SetCircleInfo(color, num);
+
+        //SEManager.Instance.Play(SEPath.BUBBLE,pitch:0.1f);
     }
 }

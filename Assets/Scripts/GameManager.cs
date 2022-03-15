@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using System.Linq;
 
 public enum GameState
 {
@@ -17,7 +18,8 @@ public class GameManager : MonoBehaviour
 
     public GameState gameState { get; private set; }
 
-    private Color[] useColor= { Color.red, Color.green, Color.blue };
+    private Color[] useColor= { Color.red, new Color32(0,100,0,255), Color.blue };
+    private Color[] selectedColorArray = new Color[GenerateSpan];
 
     private int combineCount = 0;
     private int maxGenerateNum;
@@ -34,7 +36,6 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //useColor = new Color[]{ Color.red, Color.green, Color.blue };
         UIController.SetSlider(useColor);
         gameState = GameState.Playing;
         maxGenerateNum = 50;
@@ -53,11 +54,12 @@ public class GameManager : MonoBehaviour
             {
                 combineCount = 0;
                 selectedColorViewer.ResetColor();
+                var generateColors = selectedColorArray.Concat(selectedColorArray).ToArray();
                 for (int i = 0; i < GenerateQuantity; i++)
                 {
                     var generatePos = GetGeneratePos(-4.5f, 4.5f, -3.5f, 0f,Vector3.zero);
                     int num = GetGenerateCircleNum(1, maxGenerateNum);
-                    var color = GetGenerateCircleColor();
+                    var color = generateColors[i];
                     circleGenerator.GenerateCircle(generatePos, color, num);
                 }
             })
@@ -124,6 +126,7 @@ public class GameManager : MonoBehaviour
     public void CombinedCallback(Color color)
     {
         selectedColorViewer.SetColor(color, combineCount);
+        selectedColorArray[combineCount] = color;
         combineCount++;
     }
 

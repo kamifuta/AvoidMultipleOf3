@@ -36,7 +36,7 @@ public class UIController : MonoBehaviour
 
     public void UpdataHighScoreText(int highScore)
     {
-        highScoreText.text = $"HIGH SCORE:{highScore}";
+        highScoreText.text = $"HIGH\nSCORE:{highScore}";
     }
 
     public void UpdataColorSlider(float totalArea, float[] colorArea)

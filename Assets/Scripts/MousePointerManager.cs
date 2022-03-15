@@ -34,9 +34,11 @@ public class MousePointerManager : MonoBehaviour
                 clickedPos = MousePos;
 
                 Ray mouseRay = mainCamera.ScreenPointToRay(MousePos);
+                float radius;
                 if (circleCombiner.CheckClickedCircle(mouseRay))
                 {
                     clickedObjPos = circleCombiner.clickedObj.transform.position;
+                    radius = circleCombiner.clickedObj.GetComponent<Circle>().radius;
                 }
                 else
                 {
@@ -49,7 +51,7 @@ public class MousePointerManager : MonoBehaviour
                     .Subscribe(x =>
                     {
                         Ray dragRay = new Ray(clickedObjPos, x);
-                        if (circleCombiner.SetTargetCircle(dragRay)) dragVecSubject.OnCompleted();
+                        if (circleCombiner.SetTargetCircle(dragRay,radius+0.1f)) dragVecSubject.OnCompleted();
                     })
                     .AddTo(this);
             })

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using KanKikuchi.AudioManager;
 
 public class StartTextController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class StartTextController : MonoBehaviour
 
     private void Start()
     {
+        BGMManager.Instance.Play(BGMPath.PLAYING);
         StartCoroutine(BlinkText());
     }
 

@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using KanKikuchi.AudioManager;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ public class CircleCombiner : MonoBehaviour
         }
     }
 
-    public bool SetTargetCircle(Ray ray)
+    public bool SetTargetCircle(Ray ray, float length)
     {
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, DragRayDistance, CircleLayermask);
         if (hit.collider != null)
@@ -71,6 +72,8 @@ public class CircleCombiner : MonoBehaviour
             {
                 var targetCircle = targetObj.GetComponent<Circle>();
                 targetCircle.Combine(clickedCircle.num);
+
+                //SEManager.Instance.Play(SEPath.BUBBLE);
 
                 gameManager.CombinedCallback(targetCircle.color);
                 combineCallback();

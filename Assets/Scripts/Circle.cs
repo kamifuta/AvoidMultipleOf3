@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using KanKikuchi.AudioManager;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,7 +18,7 @@ public class Circle : MonoBehaviour, ICombinable
     private SpriteRenderer spriteRenderer;
     public  Color color { get; private set; }
     public int num { get; private set; }
-    private float radius;
+    public float radius { get; private set; }
     private float lastArea;
     private float currentArea;
 
@@ -43,11 +44,13 @@ public class Circle : MonoBehaviour, ICombinable
                 numText.text = x.ToString();
                 if (x % 3 == 0) //”š‚ª3‚Ì”{”‚É‚È‚Á‚½‚Æ‚«
                 {
+                    SEManager.Instance.Play(SEPath.BUBBLE,pitch:0.3f);
                     gameManager.MadeMultipleOfThree(num,transform.position);
                     Destroy(gameObject);
                 }
                 else //”š‚ªO‚Ì”{”‚Å‚È‚¢‚Æ‚«
                 {
+                    SEManager.Instance.Play(SEPath.BUBBLE);
                     SetCircleScale();
                     gameManager.SetHighNumber(num);
                 }
@@ -60,6 +63,7 @@ public class Circle : MonoBehaviour, ICombinable
             {
                 if (x % 3 != 0) 
                 {
+                    scoreManager.AddScore(num);
                     effectGenerator.PlayCombineEF(transform.position);
                 }
             })
@@ -84,7 +88,6 @@ public class Circle : MonoBehaviour, ICombinable
     private void SetCircleScale()
     {
         radius = ValueDecider.DecideRadius(num);
-        //transform.localScale = new Vector3(radius*2, radius*2, 1);
         var token = this.GetCancellationTokenOnDestroy();
         ExpandCircle(token).Forget();
     }
@@ -123,7 +126,6 @@ public class Circle : MonoBehaviour, ICombinable
 
     private void OnDestroy()
     {
-        gameManager.DecreaseArea(color,currentArea);
-        scoreManager.AddScore(num);
+        gameManager.DecreaseArea(color, currentArea);
     }
 }
